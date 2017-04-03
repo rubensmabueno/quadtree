@@ -11,8 +11,8 @@ describe Spotippos::PropertiesResource, type: :api do
           price: 3,
           description: 'foo',
           beds: 4,
-          baths: 5,
-          squareMeters: 6
+          baths: 4,
+          squareMeters: 20
         }
       end
 
@@ -22,7 +22,7 @@ describe Spotippos::PropertiesResource, type: :api do
         property = Spotippos::Property.repository.values.first
 
         expect(property).to have_attributes(
-          x: 1, y: 2, title: 'foo', price: 3, description: 'foo', beds: 4, baths: 5, square_meters: 6
+          x: 1, y: 2, title: 'foo', price: 3, description: 'foo', beds: 4, baths: 4, square_meters: 20
         )
 
         expect(last_response.status).to eq 201

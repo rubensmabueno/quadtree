@@ -14,9 +14,9 @@ module Spotippos
         requires :title, type: String, desc: 'Title given to the property'
         requires :price, type: Float, desc: 'Price of the property'
         requires :description, type: String, desc: 'A brief description of the property'
-        requires :beds, type: Integer, desc: 'Number of beds of the property'
-        requires :baths, type: Integer, desc: 'Number of baths of the property'
-        requires :squareMeters, type: Integer, desc: 'Square meters of the property'
+        requires :beds, type: Integer, desc: 'Number of beds of the property', values: (1..5)
+        requires :baths, type: Integer, desc: 'Number of baths of the property', values: (1..4)
+        requires :squareMeters, type: Integer, desc: 'Square meters of the property', values: (20..240)
       end
       post do
         property = Property.new(**snake_case_params)
