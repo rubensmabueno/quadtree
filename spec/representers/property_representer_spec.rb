@@ -4,8 +4,7 @@ require 'spec_helper'
 describe Spotippos::PropertyRepresenter do
   describe '#to_json' do
     let(:property) do
-      build_stubbed(
-        :property,
+      Spotippos::Property.new(
         x: 10,
         y: 10,
         title: 'Property',
@@ -18,8 +17,8 @@ describe Spotippos::PropertyRepresenter do
     end
     let(:provinces) do
       [
-        Spotippos::Province.new('foo', 'foo', 'bar'),
-        Spotippos::Province.new('bar', 'foo', 'bar')
+        Spotippos::Province.new(name: 'foo', upper_left: 'foo', bottom_right: 'bar'),
+        Spotippos::Province.new(name: 'bar', upper_left: 'foo', bottom_right: 'bar')
       ]
     end
 
@@ -28,12 +27,14 @@ describe Spotippos::PropertyRepresenter do
     end
 
     it 'transform model into a json object' do
+      property.save
+
       expect(JSON.parse(property.extend(described_class).to_json)).to include(
         'id' => property.id,
         'x' => 10,
         'y' => 10,
         'title' => 'Property',
-        'price' => 3000.0,
+        'price' => 3000,
         'description' => 'Brief description',
         'beds' => 3,
         'baths' => 2,

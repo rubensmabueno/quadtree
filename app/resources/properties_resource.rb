@@ -2,7 +2,7 @@ module Spotippos
   class PropertiesResource < Grape::API
     helpers do
       def snake_case_params
-        Hash[params.map { |key, value| [key.underscore, value] }]
+        Hash[params.map { |key, value| [key.underscore, value] }].symbolize_keys
       end
     end
 
@@ -19,14 +19,15 @@ module Spotippos
         requires :squareMeters, type: Integer, desc: 'Square meters of the property'
       end
       post do
-        property = Property.create!(snake_case_params)
+        property = Property.new(**snake_case_params)
+        property.save
 
         present property, with: PropertyRepresenter
       end
 
       desc 'Find a property'
       get ':id' do
-        property = Property.find(params[:id])
+        property = Property[params[:id]]
 
         present property, with: PropertyRepresenter
       end
@@ -41,8 +42,8 @@ module Spotippos
       get do
         properties = Kingdom.find_properties(
           Quadtree::Rectangle.new(
-            Quadtree::Point.new(params['ax'], params['ay']),
-            Quadtree::Point.new(params['bx'], params['by'])
+            Quadtree::Point.new(params[:ax], params[:ay]),
+            Quadtree::Point.new(params[:bx], params[:by])
           )
         )
 

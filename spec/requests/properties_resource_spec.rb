@@ -19,7 +19,7 @@ describe Spotippos::PropertiesResource, type: :api do
       it 'returns 201 status code, saves the property on the database and return a representer of it' do
         post '/properties', params
 
-        property = Spotippos::Property.first
+        property = Spotippos::Property.repository.values.first
 
         expect(property).to have_attributes(
           x: 1, y: 2, title: 'foo', price: 3, description: 'foo', beds: 4, baths: 5, square_meters: 6

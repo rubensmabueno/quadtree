@@ -1,7 +1,19 @@
 require 'spec_helper'
 
 describe Spotippos::Property do
-  subject { build(:property) }
+  subject { described_class.new(**attributes) }
+  let(:attributes) do
+    {
+      x: 1,
+      y: 2,
+      title: 'foo',
+      price: 4,
+      description: 'foo',
+      beds: 5,
+      baths: 6,
+      square_meters: 7
+    }
+  end
 
   describe '#provinces' do
     let(:provinces) { double(:provinces) }

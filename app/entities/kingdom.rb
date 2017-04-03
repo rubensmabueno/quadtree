@@ -17,13 +17,10 @@ module Spotippos
       private
 
       def quadtree
-        @quadtree ||= Quadtree::Quarter.new(rectangle, provinces)
+        @quadtree ||= Quadtree::Quarter.new(upper_left, bottom_right, provinces)
       end
 
-      def rectangle
-        @rectangle ||= Quadtree::Rectangle.new(upper_left, bottom_right)
-      end
-
+      # Take the province at the most top left to be a reference for the quarter
       def upper_left
         @upper_left ||= Quadtree::Point.new(
           provinces.map { |province| province.upper_left.x }.min,
@@ -31,6 +28,7 @@ module Spotippos
         )
       end
 
+      # Take the province at the most bottom right to be a reference for the quarter
       def bottom_right
         @bottom_right ||= Quadtree::Point.new(
           provinces.map { |province| province.bottom_right.x }.max,
@@ -57,12 +55,12 @@ module Spotippos
       def provinces
         @provinces ||= JSON.parse(File.read(provinces_file)).map do |name, attributes|
           Province.new(
-            name,
-            Quadtree::Point.new(
+            name: name,
+            upper_left: Quadtree::Point.new(
               attributes['boundaries']['upperLeft']['x'],
               attributes['boundaries']['upperLeft']['y']
             ),
-            Quadtree::Point.new(
+            bottom_right: Quadtree::Point.new(
               attributes['boundaries']['bottomRight']['x'],
               attributes['boundaries']['bottomRight']['y']
             )
