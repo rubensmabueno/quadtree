@@ -10,5 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20170403043823) do
+
+  create_table "properties", force: :cascade do |t|
+    t.integer  "x",             null: false
+    t.integer  "y",             null: false
+    t.string   "title",         null: false
+    t.float    "price",         null: false
+    t.string   "description",   null: false
+    t.integer  "beds",          null: false
+    t.integer  "baths",         null: false
+    t.integer  "square_meters", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
 end

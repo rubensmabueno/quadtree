@@ -18,8 +18,15 @@ module Spotippos
         requires :baths, type: Integer, desc: 'Number of baths of the property'
         requires :squareMeters, type: Integer, desc: 'Square meters of the property'
       end
-      post '/' do
+      post do
         property = Property.create!(snake_case_params)
+
+        present property, with: PropertyRepresenter
+      end
+
+      desc 'Find a property'
+      get ':id' do
+        property = Property.find(params[:id])
 
         present property, with: PropertyRepresenter
       end

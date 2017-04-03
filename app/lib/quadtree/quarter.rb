@@ -22,16 +22,32 @@ module Quadtree
       fourth_quarter.build
     end
 
+    def add_point(point)
+      points << point
+
+      return self if area_leaf?
+
+      if first_quarter.rectangle.contains?(point)
+        first_quarter.add_point(point)
+      elsif second_quarter.rectangle.contains?(point)
+        second_quarter.add_point(point)
+      elsif third_quarter.rectangle.contains?(point)
+        third_quarter.add_point(point)
+      elsif fourth_quarter.rectangle.contains?(point)
+        fourth_quarter.add_point(point)
+      end
+    end
+
     def find_area(area)
       return [self] if rectangle == area
 
       [first_quarter, second_quarter, third_quarter, fourth_quarter].inject([]) do |quarters, quarter|
-        if quarter.rectangle.related?(area) && quarter.points.length >= 1
-          quarters += if quarter.rectangle.within?(area)
-                        [quarter]
-                      else
-                        quarter.find_area(area)
-          end
+        next quarters unless quarter.rectangle.related?(area) && quarter.points.length >= 1
+
+        quarters += if quarter.rectangle.within?(area)
+                    [quarter]
+                  else
+                    quarter.find_area(area)
         end
 
         quarters

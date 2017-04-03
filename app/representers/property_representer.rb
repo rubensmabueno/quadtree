@@ -14,5 +14,10 @@ module Spotippos
     property :beds
     property :baths
     property :square_meters, as: :squareMeters
+    property :provinces_name, as: :provinces, exec_context: :decorator
+
+    def provinces_name
+      provinces.map(&:name)
+    end
   end
 end
