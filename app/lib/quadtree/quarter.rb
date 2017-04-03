@@ -5,12 +5,13 @@ module Quadtree
   class Quarter < Rectangle
     LAMBDA = 1
 
-    attr_accessor :upper_left, :bottom_right, :areas, :points
+    attr_accessor :upper_left, :bottom_right, :areas, :temporary_areas, :points
 
-    def initialize(upper_left, bottom_right, areas = [], points = [])
+    def initialize(upper_left, bottom_right, areas = [], temporary_areas = [], points = [])
       super(upper_left, bottom_right)
 
       self.areas = areas
+      self.temporary_areas = temporary_areas
       self.points = points
     end
 
@@ -18,7 +19,7 @@ module Quadtree
     def add_point(point)
       points << point unless points.include?(point)
 
-      return self if area_leaf?
+      return self if area_leaf? && temporary_area_leaf?
 
       if first_quarter.contains?(point)
         first_quarter.add_point(point)
@@ -32,6 +33,8 @@ module Quadtree
     end
 
     def find_area(area)
+      temporary_areas << area if related?(area)
+
       return [self] if self == area
 
       [first_quarter, second_quarter, third_quarter, fourth_quarter].inject([]) do |quarters, quarter|
@@ -97,6 +100,11 @@ module Quadtree
       @fourth_quarter.areas = @fourth_quarter.areas_within(areas)
       @fourth_quarter.points = @fourth_quarter.points_within(points)
       @fourth_quarter
+    end
+
+    # Check if no point are contained and this rectangle is contained by all areas
+    def temporary_area_leaf?
+      area_leaf? && temporary_areas.all? { |area| within?(area) }
     end
 
     # Check if no point are contained and this rectangle is contained by all areas
