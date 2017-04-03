@@ -45,9 +45,9 @@ module Quadtree
         next quarters unless quarter.rectangle.related?(area) && quarter.points.length >= 1
 
         quarters += if quarter.rectangle.within?(area)
-                    [quarter]
-                  else
-                    quarter.find_area(area)
+                      [quarter]
+                    else
+                      quarter.find_area(area)
         end
 
         quarters

@@ -1,7 +1,5 @@
 module Quadtree
   class Point
-    include Comparable
-
     attr_accessor :x, :y
 
     def initialize(x, y)

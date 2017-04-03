@@ -6,37 +6,19 @@ require 'lib/quadtree/quarter'
 module Spotippos
   class Kingdom
     class << self
-      def find_province(point)
-        quadtree.add_point(point).areas
+      def find_province(property)
+        quadtree.add_point(property).areas
       end
 
       def find_properties(rectangle)
         quadtree.find_area(rectangle).map(&:points).flatten
       end
 
-      def quadtree
-        return @quadtree if @quadtree
-
-        @quadtree = Quadtree::Quarter.new(rectangle, provinces)
-      end
-
-      def provinces
-        @provinces ||= JSON.parse(File.read(File.expand_path('../../../provinces.json', __FILE__))).map do |name, attributes|
-          Spotippos::Province.new(
-            name,
-            Quadtree::Point.new(
-              attributes['boundaries']['upperLeft']['x'],
-              attributes['boundaries']['upperLeft']['y']
-            ),
-            Quadtree::Point.new(
-              attributes['boundaries']['bottomRight']['x'],
-              attributes['boundaries']['bottomRight']['y']
-            )
-          )
-        end
-      end
-
       private
+
+      def quadtree
+        @quadtree ||= Quadtree::Quarter.new(rectangle, provinces)
+      end
 
       def rectangle
         @rectangle ||= Quadtree::Rectangle.new(upper_left, bottom_right)
@@ -54,6 +36,10 @@ module Spotippos
           provinces.map { |province| province.bottom_right.x }.max,
           provinces.map { |province| province.bottom_right.y }.min
         )
+      end
+
+      def provinces
+        Province.all
       end
     end
   end

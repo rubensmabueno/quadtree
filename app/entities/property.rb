@@ -1,11 +1,9 @@
 module Spotippos
   class Property < ActiveRecord::Base
-    def point
-      Quadtree::Point.new(x, y)
-    end
+    include ActAsPoint
 
     def provinces
-      Spotippos::Kingdom.find_province(self.point)
+      Spotippos::Kingdom.find_province(self)
     end
   end
 end

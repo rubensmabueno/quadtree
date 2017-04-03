@@ -38,7 +38,7 @@ describe Spotippos::PropertyRepresenter do
         'beds' => 3,
         'baths' => 2,
         'squareMeters' => 65,
-        'provinces' => [ 'foo', 'bar' ]
+        'provinces' => %w(foo bar)
       )
     end
   end
