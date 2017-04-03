@@ -7,11 +7,13 @@ module Spotippos
     end
 
     def method_missing(method_name, *arguments, &block)
-      rectangle.send(method_name, *arguments, &block)
+      return rectangle.send(method_name, *arguments, &block) if rectangle.respond_to?(method_name)
+
+      super
     end
 
-    def respond_to?(method_name, include_private = false)
-      rectangle.respond_to?(method_name, include_private) || super
+    def respond_to_missing?(method_name, include_private = false)
+      rectangle.respond_to_missing?(method_name, include_private) || super
     end
   end
 end

@@ -38,8 +38,44 @@ module Spotippos
         )
       end
 
+      def properties
+        @properties ||= JSON.parse(File.read(properties_file))['properties'].map do |attributes|
+          Property.new(
+            id: attributes['id'],
+            title: attributes['title'],
+            price: attributes['price'],
+            description: attributes['description'],
+            x: attributes['lat'],
+            y: attributes['long'],
+            beds: attributes['beds'],
+            baths: attributes['baths'],
+            square_meters: attributes['squareMeters']
+          )
+        end
+      end
+
       def provinces
-        Province.all
+        @provinces ||= JSON.parse(File.read(provinces_file)).map do |name, attributes|
+          Province.new(
+            name,
+            Quadtree::Point.new(
+              attributes['boundaries']['upperLeft']['x'],
+              attributes['boundaries']['upperLeft']['y']
+            ),
+            Quadtree::Point.new(
+              attributes['boundaries']['bottomRight']['x'],
+              attributes['boundaries']['bottomRight']['y']
+            )
+          )
+        end
+      end
+
+      def properties_file
+        @properties_file ||= File.expand_path('../../../properties.json', __FILE__)
+      end
+
+      def provinces_file
+        @provinces_file ||= File.expand_path('../../../provinces.json', __FILE__)
       end
     end
   end
