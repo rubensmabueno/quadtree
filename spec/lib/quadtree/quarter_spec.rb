@@ -39,7 +39,7 @@ describe Quadtree::Quarter do
     end
   end
 
-  describe '#find_point' do
+  describe '#add_point' do
     subject { described_class.new(rectangle, areas, points) }
 
     let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
@@ -49,7 +49,7 @@ describe Quadtree::Quarter do
       let(:points) { [Quadtree::Point.new(5, 5)] }
 
       it 'returns an quarter which is contained by the given area' do
-        quarter = subject.find_point(points.first)
+        quarter = subject.add_point(points.first)
 
         expect(quarter.rectangle.within?(areas.first)).to be_truthy
         expect(quarter.rectangle.contains?(points.first)).to be_truthy
@@ -61,7 +61,7 @@ describe Quadtree::Quarter do
       let(:points) { [Quadtree::Point.new(11, 11)] }
 
       it 'returns nil' do
-        expect(subject.find_point(points.first)).to be_nil
+        expect(subject.add_point(points.first)).to be_nil
       end
     end
 
@@ -75,7 +75,7 @@ describe Quadtree::Quarter do
       let(:points) { [Quadtree::Point.new(5, 5)] }
 
       it 'returns an quarter which is contained by both given area' do
-        quarter = subject.find_point(points.first)
+        quarter = subject.add_point(points.first)
 
         expect(quarter.rectangle.within?(areas.first)).to be_truthy
         expect(quarter.rectangle.within?(areas.second)).to be_truthy

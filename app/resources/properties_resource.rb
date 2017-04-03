@@ -30,6 +30,24 @@ module Spotippos
 
         present property, with: PropertyRepresenter
       end
+
+      desc 'Find a property within an area'
+      params do
+        requires :ax, type: Integer, desc: 'Latitude location of the upper_left of the area'
+        requires :ay, type: Integer, desc: 'Longitude location of the upper_left of the area'
+        requires :bx, type: Integer, desc: 'Latitude location of the bottom_right of the area'
+        requires :by, type: Integer, desc: 'Longitude location of the bottom_right of the area'
+      end
+      get do
+        properties = Kingdom.find_properties(
+          Quadtree::Rectangle.new(
+            Quadtree::Point.new(params['ax'], params['ay']),
+            Quadtree::Point.new(params['bx'], params['by'])
+          )
+        )
+
+        present properties, with: PropertyCollectionRepresenter
+      end
     end
   end
 end

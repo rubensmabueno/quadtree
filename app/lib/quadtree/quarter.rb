@@ -12,18 +12,9 @@ module Quadtree
       self.points = points
     end
 
-    # Recursive build until the leafs
-    def build
-      return if leaf?
-
-      first_quarter.build
-      second_quarter.build
-      third_quarter.build
-      fourth_quarter.build
-    end
-
+    # Iterate through quarters which should contain the given point until it is a area_leaf
     def add_point(point)
-      points << point
+      points << point unless points.include?(point)
 
       return self if area_leaf?
 
@@ -42,36 +33,15 @@ module Quadtree
       return [self] if rectangle == area
 
       [first_quarter, second_quarter, third_quarter, fourth_quarter].inject([]) do |quarters, quarter|
-        next quarters unless quarter.rectangle.related?(area) && quarter.points.length >= 1
-
-        quarters += if quarter.rectangle.within?(area)
-                      [quarter]
-                    else
-                      quarter.find_area(area)
+        if quarter.rectangle.related?(area) && quarter.points.length >= 1
+          quarters += if quarter.rectangle.within?(area)
+                        [quarter]
+                      else
+                        quarter.find_area(area)
+                      end
         end
 
         quarters
-      end
-    end
-
-    # Iterate through quarters which contains the given point until the given block is satisfacted and return the quadtree
-    def find_point(point, &block)
-      if first_quarter.points.include?(point)
-        return first_quarter if first_quarter.area_leaf?
-
-        first_quarter.find_point(point, &block)
-      elsif second_quarter.points.include?(point)
-        return second_quarter if second_quarter.area_leaf?
-
-        second_quarter.find_point(point, &block)
-      elsif third_quarter.points.include?(point)
-        return third_quarter if third_quarter.area_leaf?
-
-        third_quarter.find_point(point, &block)
-      elsif fourth_quarter.points.include?(point)
-        return fourth_quarter if fourth_quarter.area_leaf?
-
-        fourth_quarter.find_point(point, &block)
       end
     end
 
