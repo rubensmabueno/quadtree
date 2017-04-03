@@ -1,4 +1,4 @@
-require 'lib/quadtree/rectangle'
+require 'spec_helper'
 
 describe Quadtree::Rectangle do
   describe '#==' do

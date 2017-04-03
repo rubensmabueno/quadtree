@@ -1,4 +1,4 @@
-require 'lib/quadtree/quarter'
+require 'spec_helper'
 
 describe Quadtree::Quarter do
   describe '#find_area' do

@@ -1,4 +1,4 @@
-require 'lib/quadtree/point'
+require 'spec_helper'
 
 describe Quadtree::Point do
   describe '#==' do
