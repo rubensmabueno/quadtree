@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Quadtree::Quarter do
   describe '#find_area' do
-    subject { described_class.new(rectangle, areas, points) }
-
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
     context 'when there are areas within the quarter' do
       let(:area) { Quadtree::Rectangle.new(Quadtree::Point.new(2, 9), Quadtree::Point.new(9, 2)) }
@@ -40,9 +38,7 @@ describe Quadtree::Quarter do
   end
 
   describe '#add_point' do
-    subject { described_class.new(rectangle, areas, points) }
-
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
     context 'when there are points inside the area' do
       let(:areas) { [Quadtree::Rectangle.new(Quadtree::Point.new(3, 6), Quadtree::Point.new(6, 3))] }
@@ -51,8 +47,8 @@ describe Quadtree::Quarter do
       it 'returns an quarter which is contained by the given area' do
         quarter = subject.add_point(points.first)
 
-        expect(quarter.rectangle.within?(areas.first)).to be_truthy
-        expect(quarter.rectangle.contains?(points.first)).to be_truthy
+        expect(quarter.within?(areas.first)).to be_truthy
+        expect(quarter.contains?(points.first)).to be_truthy
       end
     end
 
@@ -77,17 +73,15 @@ describe Quadtree::Quarter do
       it 'returns an quarter which is contained by both given area' do
         quarter = subject.add_point(points.first)
 
-        expect(quarter.rectangle.within?(areas.first)).to be_truthy
-        expect(quarter.rectangle.within?(areas.second)).to be_truthy
-        expect(quarter.rectangle.contains?(points.first)).to be_truthy
+        expect(quarter.within?(areas[0])).to be_truthy
+        expect(quarter.within?(areas[1])).to be_truthy
+        expect(quarter.contains?(points.first)).to be_truthy
       end
     end
   end
 
   describe '#area_leaf?' do
-    subject { described_class.new(rectangle, areas, points) }
-
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
     context 'with two areas around' do
       let(:areas) do
@@ -133,9 +127,7 @@ describe Quadtree::Quarter do
   end
 
   describe '#point_leaf?' do
-    subject { described_class.new(rectangle, areas, points) }
-
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
     context 'with all points are equal' do
       let(:areas) { [] }
@@ -157,14 +149,13 @@ describe Quadtree::Quarter do
   end
 
   describe '#first_quarter' do
-    subject { described_class.new(rectangle, areas, points) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
     let(:areas) { [] }
     let(:points) { [] }
 
     it 'returns the first quarter of the rectangle on clockwise direction' do
-      expect(subject.first_quarter.rectangle).to eq(
+      expect(subject.first_quarter).to eq(
         Quadtree::Rectangle.new(
           Quadtree::Point.new(1, 10),
           Quadtree::Point.new(5, 6)
@@ -206,14 +197,13 @@ describe Quadtree::Quarter do
   end
 
   describe '#second_quarter' do
-    subject { described_class.new(rectangle, areas, points) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
     let(:areas) { [] }
     let(:points) { [] }
 
     it 'returns the second quarter of the rectangle on clockwise direction' do
-      expect(subject.second_quarter.rectangle).to eq(
+      expect(subject.second_quarter).to eq(
         Quadtree::Rectangle.new(
           Quadtree::Point.new(6, 10),
           Quadtree::Point.new(10, 6)
@@ -255,14 +245,13 @@ describe Quadtree::Quarter do
   end
 
   describe '#third_quarter' do
-    subject { described_class.new(rectangle, areas, points) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
     let(:areas) { [] }
     let(:points) { [] }
 
     it 'returns the second quarter of the rectangle on clockwise direction' do
-      expect(subject.third_quarter.rectangle).to eq(
+      expect(subject.third_quarter).to eq(
         Quadtree::Rectangle.new(
           Quadtree::Point.new(1, 5),
           Quadtree::Point.new(5, 1)
@@ -304,14 +293,13 @@ describe Quadtree::Quarter do
   end
 
   describe '#fourth_quarter' do
-    subject { described_class.new(rectangle, areas, points) }
+    subject { described_class.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1), areas, points) }
 
-    let(:rectangle) { Quadtree::Rectangle.new(Quadtree::Point.new(1, 10), Quadtree::Point.new(10, 1)) }
     let(:areas) { [] }
     let(:points) { [] }
 
     it 'returns the fourth quarter of the rectangle on clockwise direction' do
-      expect(subject.fourth_quarter.rectangle).to eq(
+      expect(subject.fourth_quarter).to eq(
         Quadtree::Rectangle.new(
           Quadtree::Point.new(6, 5),
           Quadtree::Point.new(10, 1)
