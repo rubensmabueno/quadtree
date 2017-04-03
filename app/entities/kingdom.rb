@@ -14,18 +14,22 @@ module Spotippos
         quadtree.find_area(rectangle).map(&:points).flatten
       end
 
+      def add_property(property)
+        quadtree.add_point(property)
+      end
+
       def properties
         @properties ||= JSON.parse(File.read(properties_file))['properties'].map do |attributes|
           Property.new(
-              id: attributes['id'],
-              title: attributes['title'],
-              price: attributes['price'],
-              description: attributes['description'],
-              x: attributes['lat'],
-              y: attributes['long'],
-              beds: attributes['beds'],
-              baths: attributes['baths'],
-              square_meters: attributes['squareMeters']
+            id: attributes['id'],
+            title: attributes['title'],
+            price: attributes['price'],
+            description: attributes['description'],
+            x: attributes['lat'],
+            y: attributes['long'],
+            beds: attributes['beds'],
+            baths: attributes['baths'],
+            square_meters: attributes['squareMeters']
           )
         end
       end
@@ -33,15 +37,15 @@ module Spotippos
       def provinces
         @provinces ||= JSON.parse(File.read(provinces_file)).map do |name, attributes|
           Province.new(
-              name: name,
-              upper_left: Quadtree::Point.new(
-                  attributes['boundaries']['upperLeft']['x'],
-                  attributes['boundaries']['upperLeft']['y']
-              ),
-              bottom_right: Quadtree::Point.new(
-                  attributes['boundaries']['bottomRight']['x'],
-                  attributes['boundaries']['bottomRight']['y']
-              )
+            name: name,
+            upper_left: Quadtree::Point.new(
+              attributes['boundaries']['upperLeft']['x'],
+              attributes['boundaries']['upperLeft']['y']
+            ),
+            bottom_right: Quadtree::Point.new(
+              attributes['boundaries']['bottomRight']['x'],
+              attributes['boundaries']['bottomRight']['y']
+            )
           )
         end
       end

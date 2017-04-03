@@ -7,12 +7,12 @@ module Quadtree
 
     attr_accessor :upper_left, :bottom_right, :areas, :temporary_areas, :points
 
-    def initialize(upper_left, bottom_right, areas = [], temporary_areas = [], points = [])
+    def initialize(upper_left, bottom_right, areas = [], points = [])
       super(upper_left, bottom_right)
 
       self.areas = areas
-      self.temporary_areas = temporary_areas
       self.points = points
+      self.temporary_areas = []
     end
 
     # Iterate through quarters which should contain the given point until it is a area_leaf
@@ -104,7 +104,7 @@ module Quadtree
 
     # Check if no point are contained and this rectangle is contained by all areas
     def temporary_area_leaf?
-      area_leaf? && temporary_areas.all? { |area| within?(area) }
+      temporary_areas.all? { |area| within?(area) }
     end
 
     # Check if no point are contained and this rectangle is contained by all areas

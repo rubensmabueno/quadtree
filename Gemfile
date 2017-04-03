@@ -2,9 +2,9 @@ source 'http://rubygems.org'
 
 gem 'grape'
 gem 'grape-roar'
-gem 'roar'
 gem 'grape-swagger'
 gem 'rack'
+gem 'roar'
 
 group :test do
   gem 'rack-test'

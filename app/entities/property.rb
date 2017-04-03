@@ -18,12 +18,13 @@ module Spotippos
     end
 
     def provinces
-      Spotippos::Kingdom.find_province(self)
+      kingdom.find_province(self)
     end
 
     def save
       return @saved if @saved
 
+      kingdom.add_property(self)
       self.class.add(self)
 
       @saved = true
@@ -31,6 +32,10 @@ module Spotippos
 
     def self.repository
       @repository ||= {}
+    end
+
+    def kingdom
+      @kingdom ||= Spotippos::Kingdom
     end
 
     def self.add(property)
@@ -45,6 +50,10 @@ module Spotippos
 
     def self.clean_all
       @repository = {}
+    end
+
+    def ==(other)
+      id == other.id
     end
   end
 end
