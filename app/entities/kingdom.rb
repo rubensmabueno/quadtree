@@ -14,6 +14,38 @@ module Spotippos
         quadtree.find_area(rectangle).map(&:points).flatten
       end
 
+      def properties
+        @properties ||= JSON.parse(File.read(properties_file))['properties'].map do |attributes|
+          Property.new(
+              id: attributes['id'],
+              title: attributes['title'],
+              price: attributes['price'],
+              description: attributes['description'],
+              x: attributes['lat'],
+              y: attributes['long'],
+              beds: attributes['beds'],
+              baths: attributes['baths'],
+              square_meters: attributes['squareMeters']
+          )
+        end
+      end
+
+      def provinces
+        @provinces ||= JSON.parse(File.read(provinces_file)).map do |name, attributes|
+          Province.new(
+              name: name,
+              upper_left: Quadtree::Point.new(
+                  attributes['boundaries']['upperLeft']['x'],
+                  attributes['boundaries']['upperLeft']['y']
+              ),
+              bottom_right: Quadtree::Point.new(
+                  attributes['boundaries']['bottomRight']['x'],
+                  attributes['boundaries']['bottomRight']['y']
+              )
+          )
+        end
+      end
+
       private
 
       def quadtree
@@ -34,38 +66,6 @@ module Spotippos
           provinces.map { |province| province.bottom_right.x }.max,
           provinces.map { |province| province.bottom_right.y }.min
         )
-      end
-
-      def properties
-        @properties ||= JSON.parse(File.read(properties_file))['properties'].map do |attributes|
-          Property.new(
-            id: attributes['id'],
-            title: attributes['title'],
-            price: attributes['price'],
-            description: attributes['description'],
-            x: attributes['lat'],
-            y: attributes['long'],
-            beds: attributes['beds'],
-            baths: attributes['baths'],
-            square_meters: attributes['squareMeters']
-          )
-        end
-      end
-
-      def provinces
-        @provinces ||= JSON.parse(File.read(provinces_file)).map do |name, attributes|
-          Province.new(
-            name: name,
-            upper_left: Quadtree::Point.new(
-              attributes['boundaries']['upperLeft']['x'],
-              attributes['boundaries']['upperLeft']['y']
-            ),
-            bottom_right: Quadtree::Point.new(
-              attributes['boundaries']['bottomRight']['x'],
-              attributes['boundaries']['bottomRight']['y']
-            )
-          )
-        end
       end
 
       def properties_file
